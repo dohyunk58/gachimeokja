@@ -1,5 +1,6 @@
 package com.css.gachimeokja.security.controller;
 
+import com.css.gachimeokja.domain.user.entity.University;
 import com.css.gachimeokja.domain.user.entity.User;
 import com.css.gachimeokja.security.dto.LoginResponseDto;
 import com.css.gachimeokja.security.jwt.JwtTokenProvider;
@@ -9,7 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -31,7 +35,7 @@ public class AuthController {
 
         boolean isUserExists = userRepository.findBySocialId(socialId).isPresent();
 
-        if (isUserExists) {
+        if (isUserExists) { // 이미 가입된 회원 -> 로그인 성공 (액세스 토큰 및 리프레시 토큰 방행)
             String accessToken = jwtTokenProvider.createAccessToken(socialId);
             String refreshToken = jwtTokenProvider.createRefreshToken(socialId);
 
@@ -44,12 +48,13 @@ public class AuthController {
 
             return ResponseEntity.ok(
                     LoginResponseDto.builder()
+                            .isNewMember(false)
                             .accessToken(accessToken)
                             .refreshToken(refreshToken)
                             .nickname(existingUser.getNickname())
                             .build()
             );
-        } else {
+        } else { // 신규 회원 -> 임시 액세스 토큰 발행
             String tempToken = jwtTokenProvider.createTempToken(socialId);
 
             // 디버깅용 콘솔 출력
@@ -57,6 +62,7 @@ public class AuthController {
 
             return ResponseEntity.ok(
                     LoginResponseDto.builder()
+                            .isNewMember(true)
                             .accessToken(tempToken)
                             .build()
             );

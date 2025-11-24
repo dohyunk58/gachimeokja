@@ -13,4 +13,5 @@ public class LoginResponseDto {
     private String accessToken;
     private String refreshToken;
     private String nickname;
+    private boolean isNewMember; // 신규 회원 여부
 }
