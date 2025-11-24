@@ -34,4 +34,9 @@ public class PartyMember {
         this.orderAmount = orderAmount;
         this.status = MemberStatus.APPROVED;
     }
+
+    public enum MemberStatus {
+        APPROVED,
+        BANNED
+    }
 }

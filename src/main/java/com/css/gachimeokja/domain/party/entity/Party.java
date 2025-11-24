@@ -52,6 +52,9 @@ public class Party {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "chat_room_id")
+    private Long chatRoomId;
+
     @Builder
     public Party(User creator, String restaurant, String pickupLocation,
                  Integer targetAmount, LocalDateTime endAt, String naverMapUrl) {
@@ -86,5 +89,14 @@ public class Party {
 
     public void closeParty() {
         this.status = PartyStatus.CLOSED;
+    }
+
+    public void setChatRoomId(Long chatRoomId) {
+        this.chatRoomId = chatRoomId;
+    }
+
+    public enum PartyStatus {
+        OPEN,
+        CLOSED
     }
 }

@@ -4,7 +4,6 @@ import com.css.gachimeokja.domain.party.dto.PartyCreateRequest;
 import com.css.gachimeokja.domain.party.dto.PartyResponse;
 import com.css.gachimeokja.domain.party.entity.Party;
 import com.css.gachimeokja.domain.party.entity.PartyMember;
-import com.css.gachimeokja.domain.party.entity.PartyStatus;
 import com.css.gachimeokja.domain.party.repository.PartyMemberRepository;
 import com.css.gachimeokja.domain.party.repository.PartyRepository;
 import com.css.gachimeokja.domain.user.entity.User;
@@ -112,7 +111,7 @@ public class PartyService {
                 .orElseThrow(() -> new IllegalArgumentException("유저가 없습니다."));
 
         // 모집 중인지 확인
-        if (party.getStatus() == PartyStatus.CLOSED) {
+        if (party.getStatus() == Party.PartyStatus.CLOSED) {
             throw new IllegalStateException("이미 마감된 파티입니다.");
         }
 

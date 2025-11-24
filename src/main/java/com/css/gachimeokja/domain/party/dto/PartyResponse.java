@@ -1,7 +1,6 @@
 package com.css.gachimeokja.domain.party.dto;
 
 import com.css.gachimeokja.domain.party.entity.Party;
-import com.css.gachimeokja.domain.party.entity.PartyStatus;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -46,7 +45,7 @@ public class PartyResponse {
                 .targetAmount(party.getTargetAmount())
                 .achievementRate(rate)
                 .currentMembers(party.getMembers().size()) // 리스트 크기로 참여자 수 확인
-                .status(party.getStatus() == PartyStatus.OPEN ? "모집중" : "모집마감")
+                .status(party.getStatus() == Party.PartyStatus.OPEN ? "모집중" : "모집마감")
                 .endAt(party.getEndAt())
                 .createdAt(party.getCreatedAt())
                 .creatorId(party.getCreator().getId())
