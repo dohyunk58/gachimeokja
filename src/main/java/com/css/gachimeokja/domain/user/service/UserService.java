@@ -3,19 +3,20 @@ package com.css.gachimeokja.domain.user.service;
 import com.css.gachimeokja.domain.user.dto.request.UserSignUpRequest;
 import com.css.gachimeokja.domain.user.entity.User;
 import com.css.gachimeokja.domain.user.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
+
+    private final UserRepository userRepository;
 
     // 사용자 정보 저장
     @Transactional
-    public Long signUp(String socialId, UserSignUpRequest request) {
+    public User signUp(String socialId, UserSignUpRequest request) {
         // socialId 중복 검사
         if (userRepository.findBySocialId(socialId).isPresent()) {
             throw new IllegalArgumentException("이미 가입된 회원입니다.");
@@ -30,16 +31,11 @@ public class UserService {
         User newUser = User.builder()
                 .socialId(socialId)
                 .fullName(request.getFullName())
-                .email(request.getEmail())
-                .phoneNumber(request.getPhoneNumber())
-                .birthDate(request.getBirthdate())
-                .authImgUrl(request.getAuthImgUrl())
                 .nickname(request.getNickname())
+                .university(request.getUniversity())
                 .build();
 
-        // DB 저장
-        User savedUser = userRepository.save(newUser);
-
-        return savedUser.getId();
+        // DB 저장 후 ID 반환
+        return userRepository.save(newUser);
     }
 }
