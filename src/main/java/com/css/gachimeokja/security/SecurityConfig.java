@@ -30,7 +30,16 @@ public class SecurityConfig {
                 .formLogin(formLogin -> formLogin.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안 함 (STATELESS)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/v1/auth/kakao/callback", "/api/v1/users/universities", "/h2-console/**","/ws/**").permitAll() // 로그인 관련 경로는 모두 허용
+                        .requestMatchers(
+                                "/api/v1/auth/kakao/callback",
+                                "/api/v1/users/universities",
+                                "/h2-console/**",
+                                "/ws/**",
+                                "/api/v1/dev/token",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll() // 로그인 관련 경로는 모두 허용
                         .anyRequest().authenticated() // 그 외의 모든 요청은 인증 필요 (/signup은 카카오 로그인 후 임시 액세스 토큰 필요)
                 ).headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
 

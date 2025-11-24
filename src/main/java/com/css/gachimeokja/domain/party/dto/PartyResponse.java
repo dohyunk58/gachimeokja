@@ -1,6 +1,7 @@
 package com.css.gachimeokja.domain.party.dto;
 
 import com.css.gachimeokja.domain.party.entity.Party;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -8,24 +9,47 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@Schema(description = "공동구매 상세 정보 응답 DTO")
 public class PartyResponse {
+    @Schema(description = "공동구매 ID (채팅방 ID 겸용)", example = "1")
     private Long id;
+
+    @Schema(description = "가게 이름", example = "엽기떡볶이")
     private String restaurant;
+
+    @Schema(description = "수령 위치", example = "신공학관 1층")
     private String pickupLocation;
+
+    @Schema(description = "네이버 지도 URL", example = "https://naver.me/...")
     private String naverMapUrl;
 
+    @Schema(description = "현재 모인 금액", example = "15000")
     private Integer currentAmount;
+
+    @Schema(description = "목표 금액", example = "20000")
     private Integer targetAmount;
-    private int achievementRate; // 달성률 (%)
 
-    private int currentMembers; // 참여자 수
-    private String status;      // "모집중", "모집마감"
+    @Schema(description = "달성률 (%)", example = "75")
+    private int achievementRate;
 
+    @Schema(description = "현재 참여자 수", example = "3")
+    private int currentMembers;
+
+    @Schema(description = "모집 상태 (모집중/모집완료)", example = "모집중")
+    private String status;
+
+    @Schema(description = "마감 시간", example = "2025-12-31 18:00:00")
     private LocalDateTime endAt;
+
+    @Schema(description = "생성 시간", example = "2025-11-24 10:00:00")
     private LocalDateTime createdAt;
 
+    @Schema(description = "개설자 ID", example = "10")
     private Long creatorId;
+
+    @Schema(description = "개설자 닉네임", example = "먹짱123")
     private String creatorNickname;
+
     private Long chatRoomId;
 
     public static PartyResponse from(Party party) {
