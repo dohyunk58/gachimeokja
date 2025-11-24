@@ -1,6 +1,7 @@
 package com.css.gachimeokja.domain.user.controller;
 
 import com.css.gachimeokja.domain.user.dto.request.UserSignUpRequest;
+import com.css.gachimeokja.domain.user.entity.University;
 import com.css.gachimeokja.domain.user.entity.User;
 import com.css.gachimeokja.domain.user.service.UserService;
 import com.css.gachimeokja.security.dto.LoginResponseDto;
@@ -8,11 +9,13 @@ import com.css.gachimeokja.security.jwt.JwtTokenProvider;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -47,5 +50,19 @@ public class UserController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null); // 에러 발생 시 토큰을 반환하지 않음
         }
+    }
+
+    // 회원가입 시 대학 목록 반환
+    @GetMapping("/universities")
+    public ResponseEntity<List<Map<String, String>>> getUniversities() {
+        // Enum을 순회하며 JSON 리스트로 변환
+        List<Map<String, String>> universities = Arrays.stream(University.values())
+                .map(univ -> Map.of(
+                        "code", univ.name(),          // "DONGGUK" (서버로 보낼 값)
+                        "name", univ.getKoreanName()  // "동국대학교" (화면에 보여줄 값)
+                ))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(universities);
     }
 }
