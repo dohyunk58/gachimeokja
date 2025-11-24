@@ -1,6 +1,5 @@
 package com.css.gachimeokja.security.controller;
 
-import com.css.gachimeokja.domain.user.entity.University;
 import com.css.gachimeokja.domain.user.entity.User;
 import com.css.gachimeokja.security.dto.LoginResponseDto;
 import com.css.gachimeokja.security.jwt.JwtTokenProvider;
@@ -9,11 +8,7 @@ import com.css.gachimeokja.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/auth")
