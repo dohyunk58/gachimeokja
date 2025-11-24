@@ -11,6 +11,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collections;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -26,16 +27,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = resolveToken(request); // HTTP 헤더에서 토큰 추출
 
-        // 토큰이 존재하고, JwtTokenProvider를 통해 유효성 검증에 성공한 경우에만 인증 절차를 진행
-        if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-            String userId = jwtTokenProvider.getUserId(token); // 토큰에서 사용자 ID 추출
+        // [디버깅 1] 토큰이 들어오긴 했나?
+        System.out.println("1. Filter - Token Check: " + (token != null ? "Exist" : "Null"));
 
-            // 추출한 사용자 ID로 Authentication 객체 생성
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userId, null, null);
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        if (StringUtils.hasText(token)) {
+            boolean isValid = jwtTokenProvider.validateToken(token);
+            // [디버깅 2] 토큰이 유효한가?
+            System.out.println("2. Filter - Token Valid?: " + isValid);
 
-            // SecurityContext에 Authentication 객체 저장하여 해당 요청이 인증되었음을 알림
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            if (isValid) {
+                String userId = jwtTokenProvider.getUserId(token);
+                System.out.println("3. Filter - UserId: " + userId);
+
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userId,
+                        null,
+                        Collections.emptyList()
+                );
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                // [디버깅 4] 인증 객체 저장 완료
+                System.out.println("4. Filter - Authentication Set Success");
+            }
         }
 
         // 다음 필터로 요청을 넘김
